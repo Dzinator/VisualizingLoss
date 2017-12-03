@@ -94,30 +94,9 @@ for weight_decay in [0, 0.0005]:
 			filename = 'model_batch_size_' + str(batch_size) + '_optimizer_' + str(optimizer) + '_weight_decay_' + str(weight_decay)
 
 			#fit the model
-			for_loop_counter = 0
 			for num_epochs, learning_rate in zip([28, 14, 7, 3], [0.1, 0.01, 0.001, 0.0001]): #[150, 75, 50, 25], [0.1, 0.01, 0.001, 0.0001]
 				model.optimizer.lr.assign(learning_rate)
 				history = model.fit(X_train, Y_train, batch_size=batch_size, epochs=num_epochs, verbose=1, shuffle=False)
 
-
 				#save the model and the history object
 				model.save(filename + '.h5')
-				with open(filename + str(for_loop_counter) +  '.hist', 'wb') as f:
-					pickle.dump(history, f)
-
-				for_loop_counter += 1
-			
-			
-			
-
-			# Verify this afterwards
-			# model.save('start_dummy.h5')
-
-			# history = model.fit(X_train, Y_train, batch_size=batch_size, epochs=1, verbose=1, shuffle=False ) #callbacks=[tbCallBack]
-			
-			# model.save('end_dummy.h5')
-
-			# print(history.hist)
-
-
-			
