@@ -35,10 +35,9 @@ Y_train = np_utils.to_categorical(y_train, 10)
 Y_test = np_utils.to_categorical(y_test, 10)
 
 #8 models to be generated (2*2*2)
-for batch_size in [128, 8192]:
-	for weight_decay in [0, 0.0005]:
-		for optimizer in ['sgd', 'adam']:
-
+for weight_decay in [0, 0.0005]:
+	for optimizer in ['sgd', 'adam']:
+		for batch_size in [128, 8192]:
 			#define model architecture
 			model = Sequential()
 
@@ -90,19 +89,26 @@ for batch_size in [128, 8192]:
 			model.compile(loss='categorical_crossentropy',
 						  optimizer=opt,
 			              metrics=['acc'])
+	
+			#define the unique filname
+			filename = 'model_batch_size_' + str(batch_size) + '_optimizer_' + str(optimizer) + '_weight_decay_' + str(weight_decay)
 
 			#fit the model
-			for num_epochs, learning_rate in zip([150, 75, 50, 25], [0.1, 0.01, 0.001, 0.0001]):
+			for_loop_counter = 0
+			for num_epochs, learning_rate in zip([28, 14, 7, 3], [0.1, 0.01, 0.001, 0.0001]): #[150, 75, 50, 25], [0.1, 0.01, 0.001, 0.0001]
 				model.optimizer.lr.assign(learning_rate)
 				history = model.fit(X_train, Y_train, batch_size=batch_size, epochs=num_epochs, verbose=1, shuffle=False)
 
-			#save model file
-			filename = 'model_batch_size_' + str(batch_size) + '_optimizer_' + str(optimizer) + '_weight_decay_' + str(weight_decay)
-			model.save(filename + '.h5')
+
+				#save the model and the history object
+				model.save(filename + '.h5')
+				with open(filename + str(for_loop_counter) +  '.hist', 'wb') as f:
+					pickle.dump(history, f)
+
+				for_loop_counter += 1
 			
-			#save the history object
-			with open(filename + '.hist', 'wb') as f:
-				pickle.dump(history, f)
+			
+			
 
 			# Verify this afterwards
 			# model.save('start_dummy.h5')
