@@ -99,7 +99,9 @@ for weight_decay in [0]: #[0, 0.0005]:
 ############################ plotting section!
 # store data
 with open('figure2_data.data', 'wb') as f:
-	pickle.dump()
+	#create a dictionary containign everything
+	everything = {'training_accuracy': train_accuracy_by_graph_number, 'testing_accuracy': test_accuracy_by_graph_number, 'training_loss': train_loss_by_graph_number, 'testing_loss': test_loss_by_graph_number, 'alphas': alphas}
+	pickle.dump(everything, f)
 
 clf()
 
