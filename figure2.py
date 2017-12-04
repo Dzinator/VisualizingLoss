@@ -1,5 +1,6 @@
 import keras
 import numpy as np
+import pickle
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Activation, Flatten
 from keras.layers import Convolution2D, MaxPooling2D, BatchNormalization
@@ -29,7 +30,7 @@ Y_test = np_utils.to_categorical(y_test, 10)
 
 
 #data required for plotting the graphs
-alphas = np.arange(-0.50, 1.50, 0.1) #x axis
+alphas = np.arange(-0.50, 1.50, 0.05) #x axis
 train_accuracy_by_graph_number = {1: [], 2: [], 3: [], 4:[]}
 test_accuracy_by_graph_number = {1: [], 2: [], 3: [], 4:[]}
 train_loss_by_graph_number = {1: [], 2: [], 3: [], 4:[]}
@@ -75,7 +76,7 @@ for weight_decay in [0]: #[0, 0.0005]:
 
 			#extract loss and accuracy
 			loss = scores[0]
-			accuracy = scores[1]
+			accuracy = scores[1] * 100
 
 			#store testing metrics
 			test_loss_by_graph_number[graph_counter].append(loss)
@@ -96,6 +97,10 @@ for weight_decay in [0]: #[0, 0.0005]:
 
 
 ############################ plotting section!
+# store data
+with open('figure2_data.data', 'wb') as f:
+	pickle.dump()
+
 clf()
 
 #create the 4 graphs
@@ -130,7 +135,7 @@ for graph_number in [1]: #[1,2,3,4]:
 
 	#set the axis limits on the graph
 	ax1.set_xlim([-0.50, 1.50])
-	ax1.set_ylim([0,5])
+	ax1.set_ylim([0,20])
 	ax2.set_ylim([0,100])
 
 	title('Loss and Accuracy as a Function of Alpha ' + str(graph_number))
