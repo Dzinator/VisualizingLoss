@@ -87,7 +87,7 @@ for weight_decay in [0]: #[0, 0.0005]:
 
 			#extract loss and accuracy
 			loss = scores[0]
-			accuracy = scores[1]		
+			accuracy = scores[1] * 100	
 
 			#store training metrics
 			train_loss_by_graph_number[graph_counter].append(loss)
