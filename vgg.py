@@ -11,6 +11,7 @@ from keras import backend as K
 from keras.optimizers import SGD, Adam
 from keras.models import load_model
 from keras import regularizers
+import gc
 K.set_image_dim_ordering('th')
 
 np.random.seed(123)
@@ -34,10 +35,16 @@ X_test /= 255
 Y_train = np_utils.to_categorical(y_train, 10)
 Y_test = np_utils.to_categorical(y_test, 10)
 
+hack = 0
+
 #8 models to be generated (2*2*2)
 for weight_decay in [0, 0.0005]:
 	for optimizer in ['sgd', 'adam']:
 		for batch_size in [128, 8192]:
+			if hack == 0:
+				hack += 1
+				continue
+
 			#define model architecture
 			model = Sequential()
 
@@ -100,3 +107,12 @@ for weight_decay in [0, 0.0005]:
 
 				#save the model and the history object
 				model.save(filename + '.h5')
+
+			#for GPU reasons and memory leaks, this should do the trick
+			K.clear_session()
+			del model
+			gc.collect()
+			gc.collect()
+			gc.collect()
+			gc.collect()
+			gc.collect()
