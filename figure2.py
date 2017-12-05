@@ -14,8 +14,7 @@ from keras import regularizers
 from pylab import *
 K.set_image_dim_ordering('th')
 
-#8 models to be generated (2*2*2)
-
+#seed for reproducibility
 np.random.seed(123)
 (X_train, y_train), (X_test, y_test) = cifar10.load_data()
 
@@ -28,48 +27,82 @@ X_test /= 255
 Y_train = np_utils.to_categorical(y_train, 10)
 Y_test = np_utils.to_categorical(y_test, 10)
 
-
 #data required for plotting the graphs
-alphas = np.arange(-0.50, 1.50, 0.05) #x axis
-train_accuracy_by_graph_number = {1: [], 2: [], 3: [], 4:[]}
+#x axis values
+alphas = np.arange(-0.50, 1.50, 0.025) 
+
+#y axis values
+train_accuracy_by_graph_number = {1: [], 2: [], 3: [], 4:[]} 
 test_accuracy_by_graph_number = {1: [], 2: [], 3: [], 4:[]}
 train_loss_by_graph_number = {1: [], 2: [], 3: [], 4:[]}
 test_loss_by_graph_number = {1: [], 2: [], 3: [], 4:[]}
 
 graph_counter = 1
-for weight_decay in [0]: #[0, 0.0005]:
-	for optimizer in ['sgd']: #['sgd', 'adam']:
-		vectors_by_layer_name_1 = dict()
-		vectors_by_layer_name_2 = dict()
+for weight_decay in [0, 0.0005]:
+	for optimizer in ['sgd', 'adam']:
 
-		# small_batch_model = load_model('model_batch_size_128_optimizer_' + str(optimizer) + '_weight_decay_' + str(weight_decay) + '.h5')
-		# big_batch_model = load_model('model_batch_size_8192_optimizer_' + str(optimizer) + '_weight_decay_' + str(weight_decay) + '.h5')
+		#dictionary to store the vectors (big batch - small batch) for each layer of the network
+		vectors_by_layer_name = dict()
 
+		#load the small and big batch models
 		small_batch_model = load_model('model_batch_size_128_optimizer_' + str(optimizer) + '_weight_decay_' + str(weight_decay) + '.h5')
 		big_batch_model = load_model('model_batch_size_512_optimizer_' + str(optimizer) + '_weight_decay_' + str(weight_decay) + '.h5')
 
-		#print(len(big_batch_model.get_layer('c1').get_weights()))
-		#print(big_batch_model.get_layer('c1').get_weights()[0].shape)
 
-		#calculate vectors of all configuartions
-		for layer_name in ['c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7', 'f1', 'f2', 'f3']:
-			vectors_by_layer_name_1[layer_name] = big_batch_model.get_layer(layer_name).get_weights()[0] - small_batch_model.get_layer(layer_name).get_weights()[0]
-			vectors_by_layer_name_2[layer_name] = big_batch_model.get_layer(layer_name).get_weights()[1] - small_batch_model.get_layer(layer_name).get_weights()[1]
+		#calculate and store the names of all layers in the VGG network
+		layer_names = []
+		for layer in small_batch_model.layers:
+			layer_names.append(layer.name)
 		
+		#iterate over all the layers of the VGG network
+		for layer_name in layer_names:
+
+			#get the weights for the given layer of both the small and big batch model
+			weight_matrix_array_small = small_batch_model.get_layer(layer_name).get_weights()
+			weight_matrix_array_big = big_batch_model.get_layer(layer_name).get_weights()
+			
+			#check to skip the max pool layer as it does not have any weights
+			if len(weight_matrix_array_small) != 0:
+
+				#iterate over all weight matrices stored within a layer
+				vectors = []
+				for weight_matrix_small, weight_matrix_big in zip(weight_matrix_array_small, weight_matrix_array_big):
+					
+					#calculate difference between the big and small batch members to establish a vector for the current weight matrix for a given layer
+					diff = weight_matrix_big - weight_matrix_small
+					vectors.append(diff)
+
+				#store the vector representing the (big_batch - small_batch) direction for the current layer
+				vectors_by_layer_name[layer_name] = vectors
+		
+		
+		#we will use the big batch model's architecture as a basis to calculate the results
 		#copy for readability	
 		new_model = big_batch_model
-
-		#we will use the big batch model to calculate the results
+		
+		#iterate over all alpha values
 		for alpha in alphas:
-			for layer_name in ['c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7', 'f1', 'f2', 'f3']:
-				new_weights_1 = small_batch_model.get_layer(layer_name).get_weights()[0] + alpha * vectors_by_layer_name_1[layer_name]
-				new_weights_2 = small_batch_model.get_layer(layer_name).get_weights()[1] + alpha * vectors_by_layer_name_2[layer_name]
-				new_model.get_layer(layer_name).set_weights([new_weights_1, new_weights_2])
 
+			#adjust weights on all layers of the VGG given the alpha value
+			for layer_name in layer_names:
 
-			#m.compile(loss='mse', optimizer='rmsprop', metrics=['mae', 'mape'])
-			#scores = m.evaluate(preds, y_regression, batch_size=32, verbose=0)
-			#print '\nevaluate result: mse={}, mae={}, mape={}'.format(*scores)
+				#get the original weights of the small batch model
+				weight_matrix_array_small = small_batch_model.get_layer(layer_name).get_weights()
+
+				#check to skip the max pool layer as it does not have any weights
+				if len(weight_matrix_array_small) != 0: 
+					
+					#get the vector representing the (big_batch - small_batch) direction for the current layer
+					vector = vectors_by_layer_name[layer_name]
+					
+					#calculate new weight matrix for member of the layer's weights array
+					a_vector = []
+					for component, weight_matrix_small in zip(vector, weight_matrix_array_small):
+						a_component = weight_matrix_small + alpha * component
+						a_vector.append(a_component)
+
+					#set the new weights
+					new_model.get_layer(layer_name).set_weights(a_vector)
 
 			#evalute accuracy and loss on testing set
 			scores = new_model.evaluate(X_test, Y_test, batch_size=256, verbose=1)			
@@ -93,6 +126,7 @@ for weight_decay in [0]: #[0, 0.0005]:
 			train_loss_by_graph_number[graph_counter].append(loss)
 			train_accuracy_by_graph_number[graph_counter].append(accuracy)
 
+		#update the graph number for the figure to be generated
 		graph_counter += 1
 
 
@@ -106,7 +140,7 @@ with open('figure2_data.data', 'wb') as f:
 clf()
 
 #create the 4 graphs
-for graph_number in [1]: #[1,2,3,4]:
+for graph_number in [1,2,3,4]:
 
 	#get array of losses for training and testing 
 	train_loss = train_loss_by_graph_number[graph_number] 
@@ -153,3 +187,7 @@ show()
 # Inception v3
 # Inception-ResNet v2
 # MobileNet v1
+
+#m.compile(loss='mse', optimizer='rmsprop', metrics=['mae', 'mape'])
+#scores = m.evaluate(preds, y_regression, batch_size=32, verbose=0)
+#print '\nevaluate result: mse={}, mae={}, mape={}'.format(*scores)

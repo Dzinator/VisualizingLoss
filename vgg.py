@@ -40,10 +40,10 @@ hack = 0
 #8 models to be generated (2*2*2)
 for weight_decay in [0, 0.0005]:
 	for optimizer in ['sgd', 'adam']:
-		for batch_size in [128, 8192]:
-			if hack == 0:
-				hack += 1
-				continue
+		for batch_size in [128, 512]:
+			# if hack == 0:
+			# 	hack += 1
+			# 	continue
 
 			#define model architecture
 			model = Sequential()
@@ -82,8 +82,11 @@ for weight_decay in [0, 0.0005]:
 			model.add(BatchNormalization())
 			model.add(Flatten())
 			model.add(Dense(4096, activation='relu', kernel_regularizer=regularizers.l2(weight_decay), name='f1'))
+			model.add(BatchNormalization())
 			model.add(Dense(4096, activation='relu', kernel_regularizer=regularizers.l2(weight_decay), name='f2'))
+			model.add(BatchNormalization())
 			model.add(Dense(1000, activation='relu', kernel_regularizer=regularizers.l2(weight_decay), name='f3'))
+			model.add(BatchNormalization())
 			model.add(Dense(10, activation='softmax', name='o'))
 
 			#create required optimizer
