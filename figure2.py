@@ -12,6 +12,7 @@ from keras.optimizers import SGD, Adam
 from keras.models import load_model
 from keras import regularizers
 from pylab import *
+import gc
 K.set_image_dim_ordering('th')
 
 #seed for reproducibility
@@ -125,6 +126,16 @@ for weight_decay in [0, 0.0005]:
 			#store training metrics
 			train_loss_by_graph_number[graph_counter].append(loss)
 			train_accuracy_by_graph_number[graph_counter].append(accuracy)
+
+		#cdestroy models and call garbage collection to avoid out of memory issues
+		K.clear_session()
+		del small_batch_model
+		del big_batch_model
+		gc.collect()
+		gc.collect()
+		gc.collect()
+		gc.collect()
+		gc.collect()
 
 		#update the graph number for the figure to be generated
 		graph_counter += 1
