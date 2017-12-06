@@ -168,8 +168,8 @@ for graph_number in [1,2,3,4]:
 	ax2 = ax1.twinx()
 
 	#plot losses
-	ax1.plot(alphas, train_loss, 'k-')
-	ax1.plot(alphas, test_loss, 'k--')
+	ax1.plot(alphas, train_loss, 'b-')
+	ax1.plot(alphas, test_loss, 'b--')
 
 	#plot accuracies
 	ax2.plot(alphas, train_accuracy, 'r-')
@@ -177,7 +177,7 @@ for graph_number in [1,2,3,4]:
 
 	#set label names
 	ax1.set_xlabel('Alpha')
-	ax1.set_ylabel('Loss', color='k')
+	ax1.set_ylabel('Loss', color='b')
 	ax2.set_ylabel('Accuracy', color='r')
 
 	#set the axis limits on the graph
