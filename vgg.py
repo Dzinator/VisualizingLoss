@@ -50,42 +50,42 @@ for weight_decay in [0, 0.0005]:
 
 			#padding = "same" (=padding), padding = "valid" (= no padding)
 			#layer 1,2
-			model.add(Convolution2D(64, (3, 3), input_shape=(3,32,32), padding="same", activation='relu', kernel_regularizer=regularizers.l2(weight_decay), name='c1'))
-			model.add(BatchNormalization())
-			model.add(Convolution2D(64, (3, 3), padding="same", activation='relu', kernel_regularizer=regularizers.l2(weight_decay), name='c2'))
-			model.add(BatchNormalization())
+			model.add(Convolution2D(64, (3, 3), input_shape=(3,32,32), padding="same", activation='relu', kernel_regularizer=regularizers.l2(weight_decay), bias_regularizer=regularizers.l2(weight_decay), name='c1'))
+			model.add(BatchNormalization(axis=1))
+			model.add(Convolution2D(64, (3, 3), padding="same", activation='relu', kernel_regularizer=regularizers.l2(weight_decay), bias_regularizer=regularizers.l2(weight_decay), name='c2'))
+			model.add(BatchNormalization(axis=1))
 			model.add(MaxPooling2D(pool_size=(2,2), padding="same"))
 
 			#layer 3,4
-			model.add(BatchNormalization())
-			model.add(Convolution2D(128, (3, 3), padding="same", activation='relu', kernel_regularizer=regularizers.l2(weight_decay), name='c3'))
-			model.add(BatchNormalization())
-			model.add(Convolution2D(128, (3, 3), padding="same", activation='relu', kernel_regularizer=regularizers.l2(weight_decay), name='c4'))
-			model.add(BatchNormalization())
+			model.add(BatchNormalization(axis=1))
+			model.add(Convolution2D(128, (3, 3), padding="same", activation='relu', kernel_regularizer=regularizers.l2(weight_decay), bias_regularizer=regularizers.l2(weight_decay), name='c3'))
+			model.add(BatchNormalization(axis=1))
+			model.add(Convolution2D(128, (3, 3), padding="same", activation='relu', kernel_regularizer=regularizers.l2(weight_decay), bias_regularizer=regularizers.l2(weight_decay), name='c4'))
+			model.add(BatchNormalization(axis=1))
 			model.add(MaxPooling2D(pool_size=(2,2), padding="same"))
 
 			#layer 4,5
-			model.add(BatchNormalization())
-			model.add(Convolution2D(256, (3, 3), padding="same", activation='relu', kernel_regularizer=regularizers.l2(weight_decay), name='c5'))
-			model.add(BatchNormalization())
-			model.add(Convolution2D(256, (3, 3), padding="same", activation='relu', kernel_regularizer=regularizers.l2(weight_decay), name='c6'))
-			model.add(BatchNormalization())
+			model.add(BatchNormalization(axis=1=))
+			model.add(Convolution2D(256, (3, 3), padding="same", activation='relu', kernel_regularizer=regularizers.l2(weight_decay), bias_regularizer=regularizers.l2(weight_decay), name='c5'))
+			model.add(BatchNormalization(axis=1))
+			model.add(Convolution2D(256, (3, 3), padding="same", activation='relu', kernel_regularizer=regularizers.l2(weight_decay), bias_regularizer=regularizers.l2(weight_decay), name='c6'))
+			model.add(BatchNormalization(axis=1))
 			model.add(MaxPooling2D(pool_size=(2,2), padding="same"))
 
 			#layer 6
-			model.add(BatchNormalization())
-			model.add(Convolution2D(512, (3, 3), padding="same", activation='relu', kernel_regularizer=regularizers.l2(weight_decay), name='c7'))
-			model.add(BatchNormalization())
+			model.add(BatchNormalization(axis=1))
+			model.add(Convolution2D(512, (3, 3), padding="same", activation='relu', kernel_regularizer=regularizers.l2(weight_decay), bias_regularizer=regularizers.l2(weight_decay), name='c7'))
+			model.add(BatchNormalization(axis=1))
 			model.add(MaxPooling2D(pool_size=(2,2), padding="same"))
 
 			#layer 7,8,9
-			model.add(BatchNormalization())
+			model.add(BatchNormalization(axis=1))
 			model.add(Flatten())
-			model.add(Dense(4096, activation='relu', kernel_regularizer=regularizers.l2(weight_decay), name='f1'))
+			model.add(Dense(4096, activation='relu', kernel_regularizer=regularizers.l2(weight_decay), bias_regularizer=regularizers.l2(weight_decay), name='f1'))
 			model.add(BatchNormalization())
-			model.add(Dense(4096, activation='relu', kernel_regularizer=regularizers.l2(weight_decay), name='f2'))
+			model.add(Dense(4096, activation='relu', kernel_regularizer=regularizers.l2(weight_decay), bias_regularizer=regularizers.l2(weight_decay), name='f2'))
 			model.add(BatchNormalization())
-			model.add(Dense(1000, activation='relu', kernel_regularizer=regularizers.l2(weight_decay), name='f3'))
+			model.add(Dense(1000, activation='relu', kernel_regularizer=regularizers.l2(weight_decay), bias_regularizer=regularizers.l2(weight_decay), name='f3'))
 			model.add(BatchNormalization())
 			model.add(Dense(10, activation='softmax', name='o'))
 
