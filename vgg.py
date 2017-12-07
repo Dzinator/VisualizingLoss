@@ -35,15 +35,12 @@ X_test /= 255
 Y_train = np_utils.to_categorical(y_train, 10)
 Y_test = np_utils.to_categorical(y_test, 10)
 
-hack = 0
-
 #8 models to be generated (2*2*2)
 for weight_decay in [0, 0.0005]:
 	for optimizer in ['sgd', 'adam']:
 		for batch_size in [128, 512]:
-			# if hack == 0:
-			# 	hack += 1
-			# 	continue
+			weight_decay = 0.0005
+			optimizer = 'sgd'
 
 			#define model architecture
 			model = Sequential()
@@ -65,7 +62,7 @@ for weight_decay in [0, 0.0005]:
 			model.add(MaxPooling2D(pool_size=(2,2), padding="same"))
 
 			#layer 4,5
-			model.add(BatchNormalization(axis=1=))
+			model.add(BatchNormalization(axis=1))
 			model.add(Convolution2D(256, (3, 3), padding="same", activation='relu', kernel_regularizer=regularizers.l2(weight_decay), bias_regularizer=regularizers.l2(weight_decay), name='c5'))
 			model.add(BatchNormalization(axis=1))
 			model.add(Convolution2D(256, (3, 3), padding="same", activation='relu', kernel_regularizer=regularizers.l2(weight_decay), bias_regularizer=regularizers.l2(weight_decay), name='c6'))
