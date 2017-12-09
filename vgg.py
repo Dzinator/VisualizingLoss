@@ -37,11 +37,8 @@ Y_test = np_utils.to_categorical(y_test, 10)
 
 #8 models to be generated (2*2*2)
 for weight_decay in [0, 0.0005]:
-	for optimizer in ['sgd', 'adam']:
+	for optimizer in ['adam', 'sgd']:
 		for batch_size in [128, 512]:
-			weight_decay = 0.0005
-			optimizer = 'sgd'
-
 			#define model architecture
 			model = Sequential()
 
@@ -90,7 +87,7 @@ for weight_decay in [0, 0.0005]:
 			if optimizer == 'sgd':
 				opt = SGD(lr=0.1, decay=0, nesterov=True)
 			elif optimizer == 'adam':
-				opt = Adam(lr=0.1, beta_1=0.9, beta_2=0.999, decay=0)
+				opt = Adam(lr=0.001, beta_1=0.9, beta_2=0.999, decay=0)
 
 			#compile model
 			model.compile(loss='categorical_crossentropy',
@@ -100,13 +97,23 @@ for weight_decay in [0, 0.0005]:
 			#define the unique filname
 			filename = 'model_batch_size_' + str(batch_size) + '_optimizer_' + str(optimizer) + '_weight_decay_' + str(weight_decay)
 
-			#fit the model
-			for num_epochs, learning_rate in zip([28, 14, 7, 3], [0.1, 0.01, 0.001, 0.0001]): #[150, 75, 50, 25], [0.1, 0.01, 0.001, 0.0001]
-				model.optimizer.lr.assign(learning_rate)
-				history = model.fit(X_train, Y_train, batch_size=batch_size, epochs=num_epochs, verbose=1, shuffle=False)
+			#Due to lack of time, sgd takes fewer epochs before converging, so we shorten its training time
+			if optimizer == 'sgd':
+				#fit the model
+				for num_epochs, learning_rate in zip([28, 14, 7, 3], [0.1, 0.01, 0.001, 0.0001]): #[150, 75, 50, 25], [0.1, 0.01, 0.001, 0.0001]
+					model.optimizer.lr.assign(learning_rate)
+					history = model.fit(X_train, Y_train, batch_size=batch_size, epochs=num_epochs, verbose=1, shuffle=True)
 
-				#save the model and the history object
-				model.save(filename + '.h5')
+					#save the model and the history object
+					model.save(filename + '.h5')
+			elif optimizer == 'adam':
+				#fit the model
+				for num_epochs, learning_rate in zip([76, 38, 19, 10], [0.1, 0.01, 0.001, 0.0001]):
+					model.optimizer.lr.assign(learning_rate)
+					history = model.fit(X_train, Y_train, batch_size=batch_size, epochs=num_epochs, verbose=1, shuffle=True)
+
+					#save the model and the history object
+					model.save(filename + '.h5')		
 
 			#for GPU reasons and memory leaks, this should do the trick
 			K.clear_session()
