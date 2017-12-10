@@ -80,6 +80,16 @@ for weight_decay in [0, 0.0005]:
 		small_batch_weights_by_graph_number[graph_counter] = weights_histogram_small
 		big_batch_weights_by_graph_number[graph_counter] = weights_histogram_big
 
+		#cdestroy models and call garbage collection to avoid out of memory issues
+		K.clear_session()
+		del small_batch_model
+		del big_batch_model
+		gc.collect()
+		gc.collect()
+		gc.collect()
+		gc.collect()
+		gc.collect()
+
 #save the data 
 with open('figure3_data.data', 'wb') as f:
 	#create a dictionary containign everything
