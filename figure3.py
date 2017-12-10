@@ -12,6 +12,7 @@ from keras.optimizers import SGD, Adam
 from keras.models import load_model
 from keras import regularizers
 from pylab import *
+import gc
 
 #data required for plotting the graphs
 small_batch_weights_by_graph_number ={1: [], 2: [], 3: [], 4:[]}
