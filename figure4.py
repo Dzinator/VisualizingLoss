@@ -187,7 +187,7 @@ for weight_decay in [0, 0.0005]:
 				test_accuracy_by_graph_number[graph_counter].append(accuracy)
 
 				#evalute accuracy on training set X_train.shape[0]
-				scores = new_model.evaluate(X_train, Y_train, batch_size=256, verbose=1)	
+				scores = alpha_model.evaluate(X_train, Y_train, batch_size=256, verbose=1)	
 
 				#extract loss and accuracy
 				loss = scores[0]
@@ -219,7 +219,7 @@ with open('figure4_data.data', 'wb') as f:
 #plot the data
 clf()
 #create the 4 graphs
-for graph_number in [1,2,3,4,5,6,7,8]:
+for graph_number in [1]: #[1,2,3,4,5,6,7,8]:
 
 	#get array of losses for training and testing 
 	train_loss = train_loss_by_graph_number[graph_number] 

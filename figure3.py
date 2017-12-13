@@ -19,7 +19,7 @@ small_batch_weights_by_graph_number ={1: [], 2: [], 3: [], 4:[]}
 big_batch_weights_by_graph_number = {1: [], 2: [], 3: [], 4:[]}
 
 #hyper parameters
-number_bins = 200
+number_bins = 300
 small_batch_size = 128
 big_batch_size = 512
 
@@ -91,12 +91,13 @@ for weight_decay in [0, 0.0005]:
 		gc.collect()
 		gc.collect()
 
+		graph_counter += 1
+
 #save the data 
 with open('figure3_data.data', 'wb') as f:
 	#create a dictionary containign everything
 	everything = {'small': small_batch_weights_by_graph_number, 'large': big_batch_weights_by_graph_number}
 	pickle.dump(everything, f)
-
 
 #Plot the histogram of the weights. This function uses the parameters to achieve this
 def plotHistogram(graph_number, weight_range, optimizer, weight_decay):
@@ -111,7 +112,7 @@ def plotHistogram(graph_number, weight_range, optimizer, weight_decay):
 	#set axis labels and titles
 	plt.set_xlabel('Weight Bins')
 	plt.set_ylabel('Number of Weights')
-	plt.set_title('Histogram of Weights for Configuaration' + str(optimizer) + ', WD = ' + str(weight_decay))
+	plt.set_title('Histogram of Weights for Configuration' + str(optimizer) + ', WD = ' + str(weight_decay))
 
 	#obtain min and max values of tuple
 	mi, mx = weight_range
