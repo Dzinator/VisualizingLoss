@@ -42,8 +42,7 @@ Y_test = np_utils.to_categorical(y_test, 10)
 #x and y axis values
 alphas = np.arange(-1.0, 1.0, 0.025) 
 
-#training curve in the contour plot
-train_loss_by_graph_number = {1: [], 2: [], 3: [], 4:[], 5:[], 6:[], 7:[], 8:[]}
+
 
 #intialize model
 def createModel(batch_size, optimizer, weight_decay):
@@ -108,7 +107,8 @@ def createModel(batch_size, optimizer, weight_decay):
 
 
 #weight_matrix_list_by_layer_name_by_graph_number = {}
-
+#training curve in the contour plot
+train_loss_by_graph_number = {1: [], 2: [], 3: [], 4:[], 5:[], 6:[], 7:[], 8:[]}
 
 #iterate over all models, 8 in total (2*2*2)
 graph_counter = 1
@@ -168,7 +168,7 @@ for weight_decay in [0, 0.0005]:
 					training_loss = hist.history['loss'][0]
 
 					#append it to the losses for the current training
-					train_loss_by_graph_number[graph_counter].append()
+					train_loss_by_graph_number[graph_counter].append(training_loss)
 
 					#iterate over all layers with weights
 					for layer_name in layer_names:
@@ -201,6 +201,10 @@ for weight_decay in [0, 0.0005]:
 			with open('figure_8_model_batch_size_' + str(batch_size) + '_optimizer_' + str(optimizer) + '_weight_decay_' + str(weight_decay) + '_training.data', 'wb') as f:
 				#create a dictionary containign everything
 				pickle.dump(weight_matrix_list_by_layer_name, f)
+
+			with open('figure8_training_losses.data', 'wb') as f:
+				#create a dictionary containign everything
+				pickle.dump(train_loss_by_graph_number, f)
 
 
 
