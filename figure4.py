@@ -214,7 +214,7 @@ with open('figure4_data.data', 'wb') as f:
 #plot the data
 clf()
 #create the 4 graphs
-for graph_number in [1]: #[1,2,3,4,5,6,7,8]:
+for graph_number in [1,2,3,4,5,6,7,8]:
 
 	#get array of losses for training and testing 
 	train_loss = train_loss_by_graph_number[graph_number] 

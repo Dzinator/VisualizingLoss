@@ -187,7 +187,7 @@ for weight_decay in [0, 0.0005]:
 							alpha_model.get_layer(layer_name).set_weights(new_weights_array)
 
 					#evalute accuracy and loss on testing set
-					scores = alpha_model.evaluate(X_test, Y_test, batch_size=256, verbose=1)			
+					scores = alpha_model.evaluate(X_train, Y_train, batch_size=256, verbose=1)			
 
 					#extract loss
 					loss = scores[0]
