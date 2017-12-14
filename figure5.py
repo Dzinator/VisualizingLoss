@@ -198,6 +198,12 @@ for weight_decay in [0, 0.0005]:
 				#store testing metrics
 				test_loss_by_graph_number[graph_counter].append(losses_y)
 
+				# store data
+				with open('figure5_data.data', 'wb') as f:
+					#create a dictionary containign everything
+					everything = {'test_loss_by_graph_number': test_loss_by_graph_number, 'alphas': alphas}
+					pickle.dump(everything, f)
+
 			#destroy models and call garbage collection to avoid out of memory issues
 			K.clear_session()
 			del model
@@ -210,13 +216,7 @@ for weight_decay in [0, 0.0005]:
 
 			#update the graph number for the figure to be generated
 			graph_counter += 1
-
-# store data
-with open('figure5_data.data', 'wb') as f:
-	#create a dictionary containign everything
-	everything = {'test_loss_by_graph_number': test_loss_by_graph_number, 'alphas': alphas}
-	pickle.dump(everything, f)
-
+			
 #plot the data
 clf()
 #create the 4 graphs
