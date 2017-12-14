@@ -108,11 +108,6 @@ for weight_decay in [0, 0.0005]:
 			gc.collect()
 			gc.collect()
 
-			#Delete these break tokens afterwards
-			break
-		break
-	break
-
 #pickle the data gathered so far for the gaussian vectors generate so far
 with open('figure4_gaussian_vectors.data', 'wb') as f:
 	#create a dictionary containign everything
