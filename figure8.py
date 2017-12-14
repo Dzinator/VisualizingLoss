@@ -134,9 +134,8 @@ for weight_decay in [0, 0.0005]:
 						flatten_weights_length = 1
 						for size in weights.shape:
 							flatten_weights_length *= size
-						print(flatten_weights_length)
 						if optimizer == 'sgd':
-							weight_matrix_list_by_layer_name[layer.name].append(np.zeros((int(flatten_weights_length), 52)))
+							weight_matrix_list_by_layer_name[layer.name].append(np.zeros((flatten_weights_length, 52)))
 						elif optimizer == 'adam':
 							weight_matrix_list_by_layer_name[layer.name].append(np.zeros((int(flatten_weights_length), 143)))
 
@@ -177,14 +176,12 @@ for weight_decay in [0, 0.0005]:
 						#get weights for both the final and current epoch models
 						oracle_weights_list = oracle_model.get_layer(layer_name).get_weights()
 						training_weights_list = training_model.get_layer(layer_name).get_weights()
+						
 
 						#iterate over both weight matrices
-						for oracle_weights, training_weights, pca_weight in zip(oracle_weights_list, training_weights_list, weight_matrix_list_by_layer_name[layer.name]):
-							print('current layer ' + str(layer_name))
+						for oracle_weights, training_weights, pca_weight in zip(oracle_weights_list, training_weights_list, weight_matrix_list_by_layer_name[layer_name]):
 							vector = training_weights - oracle_weights
 							vector = vector.flatten()
-							print(vector.shape)
-							print(pca_weight.shape)
 							pca_weight[:, current_epoch] = vector
 
 					current_epoch += 1
