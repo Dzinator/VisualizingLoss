@@ -39,7 +39,7 @@ Y_test = np_utils.to_categorical(y_test, 10)
 
 # =========================== 
 #x and y axis values
-alphas = np.arange(-1.0, 1.0, 0.025) 
+alphas = np.arange(-1.0, 1.0, 0.1) 
 
 gaussian_vectors_by_graph_number_1 = dict()
 gaussian_vectors_by_graph_number_2 = dict()
