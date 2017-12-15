@@ -40,7 +40,7 @@ Y_test = np_utils.to_categorical(y_test, 10)
 
 # =========================== 
 #x and y axis values
-alphas = np.arange(-20, 20, 0.25) 
+alphas = np.arange(-20, 20, 1) 
 
 
 
@@ -176,7 +176,7 @@ for weight_decay in [0, 0.0005]:
 							#get weights for both the final and current epoch models
 							oracle_weights_list = oracle_model.get_layer(layer_name).get_weights()
 							training_weights_list = training_model.get_layer(layer_name).get_weights()
-							
+							#training_model
 
 							#iterate over both weight matrices
 							for oracle_weights, training_weights, pca_weight in zip(oracle_weights_list, training_weights_list, weight_matrix_list_by_layer_name[layer_name]):
@@ -249,8 +249,8 @@ for weight_decay in [0, 0.0005]:
 					pca_weights = pca.transform(pca_weights).transpose()
 
 					#resize the array weights
-					pca_matrix_1 = np.reshape(pca_weights[:, 0], model_weights.shape)
-					pca_matrix_2 = np.reshape(pca_weights[:, 1], model_weights.shape)
+					pca_matrix_1 = np.reshape(pca_weights[0], model_weights.shape)
+					pca_matrix_2 = np.reshape(pca_weights[1], model_weights.shape)
 
 					#calculate frobenius norm of model weights
 					frobenius_norm_filter = LA.norm(model_weights)
