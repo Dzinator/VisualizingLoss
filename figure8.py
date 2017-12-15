@@ -208,6 +208,10 @@ for weight_decay in [0, 0.0005]:
 				#create a dictionary containign everything
 				pickle.dump(train_loss_by_graph_number, f)
 
+			break
+		break
+	break
+
 ############
 #calculate pca here
 pca_vector_1_by_layer_name_by_graph_number = {1: {}, 2: {}, 3: {}, 4:{}, 5:{}, 6:{}, 7:{}, 8:{}} 
@@ -331,3 +335,7 @@ for weight_decay in [0, 0.0005]:
 			gc.collect()
 			gc.collect()
 			gc.collect()
+
+			break
+		break
+	break
