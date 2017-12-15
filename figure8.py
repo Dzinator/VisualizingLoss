@@ -133,7 +133,7 @@ for weight_decay in [0, 0.0005]:
 						for size in weights.shape:
 							flatten_weights_length *= size
 						if optimizer == 'sgd':
-							weight_matrix_list_by_layer_name[layer.name].append(np.zeros((int(flatten_weights_length), 52)))
+							weight_matrix_list_by_layer_name[layer.name].append(np.zeros((int(flatten_weights_length), 26)))
 						elif optimizer == 'adam':
 							weight_matrix_list_by_layer_name[layer.name].append(np.zeros((int(flatten_weights_length), 143)))
 
@@ -159,6 +159,7 @@ for weight_decay in [0, 0.0005]:
 
 				#iterate over each individual epoch
 				for epoch in range(0,num_epochs):
+
 					#fit the model for 1 epoch
 					hist = training_model.fit(X_train, Y_train, batch_size=batch_size, epochs=1, verbose=1, shuffle=True)
 
@@ -168,19 +169,20 @@ for weight_decay in [0, 0.0005]:
 					#append it to the losses for the current training
 					train_loss_by_graph_number[graph_counter].append(training_loss)
 
-					#iterate over all layers with weights
-					for layer_name in layer_names:
+					if epoch % 2 == 0:
+						#iterate over all layers with weights
+						for layer_name in layer_names:
 
-						#get weights for both the final and current epoch models
-						oracle_weights_list = oracle_model.get_layer(layer_name).get_weights()
-						training_weights_list = training_model.get_layer(layer_name).get_weights()
-						
+							#get weights for both the final and current epoch models
+							oracle_weights_list = oracle_model.get_layer(layer_name).get_weights()
+							training_weights_list = training_model.get_layer(layer_name).get_weights()
+							
 
-						#iterate over both weight matrices
-						for oracle_weights, training_weights, pca_weight in zip(oracle_weights_list, training_weights_list, weight_matrix_list_by_layer_name[layer_name]):
-							vector = training_weights - oracle_weights
-							vector = vector.flatten()
-							pca_weight[:, current_epoch] = vector
+							#iterate over both weight matrices
+							for oracle_weights, training_weights, pca_weight in zip(oracle_weights_list, training_weights_list, weight_matrix_list_by_layer_name[layer_name]):
+								vector = training_weights - oracle_weights
+								vector = vector.flatten()
+								pca_weight[:, current_epoch / 2] = vector
 
 					current_epoch += 1
 
