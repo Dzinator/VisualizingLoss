@@ -93,14 +93,12 @@ for weight_decay in [0, 0.0005]:
 
 		graph_counter += 1
 
-		break
-	break
-
 #save the data 
 with open('figure3_data.data', 'wb') as f:
 	#create a dictionary containign everything
 	everything = {'small': small_batch_weights_by_graph_number, 'large': big_batch_weights_by_graph_number}
 	pickle.dump(everything, f)
+
 
 #Plot the histogram of the weights. This function uses the parameters to achieve this
 def plotHistogram(graph_number, weight_range, optimizer, weight_decay):
@@ -122,15 +120,24 @@ def plotHistogram(graph_number, weight_range, optimizer, weight_decay):
 
 	#set axis limits
 	plt.set_xlim([mi, mx])
-	plt.set_ylim([0,50000])
+	plt.set_ylim([0,5000000])
 	plt.legend(loc='upper right')
 	
 #plot all 4 graphs
 clf()
-plotHistogram(1, (-0.2, 0.2), 'SGD', 0)
-plotHistogram(2, (-0.2, 0.2), 'Adam', 0)
-plotHistogram(3, (-0.01, 0.01), 'SGD', 0.0005)
-plotHistogram(4, (-0.04, 0.04), 'Adam', 0.0005)
+plotHistogram(1, (-0.5, 0.5), 'SGD', 0)
+plotHistogram(2, (-0.5, 0.5), 'Adam', 0)
+plotHistogram(3, (-0.5, 0.5), 'SGD', 0.0005)
+plotHistogram(4, (-0.5, 0.5), 'Adam', 0.0005)
 
 #present all graphs
 show()
+
+
+
+#plot all 4 graphs
+#clf()
+#plotHistogram(1, (-0.2, 0.2), 'SGD', 0)
+#plotHistogram(2, (-0.2, 0.2), 'Adam', 0)
+#plotHistogram(3, (-0.01, 0.01), 'SGD', 0.0005)
+#plotHistogram(4, (-0.04, 0.04), 'Adam', 0.0005)
