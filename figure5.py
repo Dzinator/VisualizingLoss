@@ -81,7 +81,7 @@ for weight_decay in [0, 0.0005]:
 						gaussian_weights_2 = np.random.normal(size=weight_matrix_model.shape)
 
 						#print('original weights' +  str(weight_matrix_model.shape))
-						#print('guassian weights' + str(gaussian_weights.shape))
+						#print('guassian weights' + str(gaussian_weights_1))
 
 						#calculate the frobenius norm of the weight filter
 						frobenius_norm_filter = LA.norm(weight_matrix_model)
@@ -91,6 +91,8 @@ for weight_decay in [0, 0.0005]:
 						#normalize the randomized gaussian weight vector (i.e di/||df||*||theta_i||)
 						gaussian_weights_1 = (frobenius_norm_filter / frobenius_norm_vector_1) * gaussian_weights_1
 						gaussian_weights_2 = (frobenius_norm_filter / frobenius_norm_vector_2) * gaussian_weights_2
+
+						#print('after fulter ' + str(gaussian_weights_1))
 
 						#add weight matrix to current layer's list of weight matrices
 						gaussian_vectors_1.append(gaussian_weights_1)
@@ -119,6 +121,10 @@ for weight_decay in [0, 0.0005]:
 			gc.collect()
 			gc.collect()
 			gc.collect()
+
+			break
+		break
+	break
 
 
 #pickle the data gathered so far for the gaussian vectors generate so far
@@ -187,7 +193,7 @@ for weight_decay in [0, 0.0005]:
 							alpha_model.get_layer(layer_name).set_weights(new_weights_array)
 
 					#evalute accuracy and loss on testing set
-					scores = alpha_model.evaluate(X_train, Y_train, batch_size=256, verbose=1)			
+					scores = alpha_model.evaluate(X_test, Y_test, batch_size=256, verbose=1)			
 
 					#extract loss
 					loss = scores[0]
@@ -216,11 +222,15 @@ for weight_decay in [0, 0.0005]:
 
 			#update the graph number for the figure to be generated
 			graph_counter += 1
-			
+
+			break
+		break
+	break
+
 #plot the data
 clf()
 #create the 4 graphs
-for graph_number in [1,2,3,4,5,6,7,8]:
+for graph_number in [1]: #[1,2,3,4,5,6,7,8]:
 
 	#get array of losses for training and testing 
 	test_loss = test_loss_by_graph_number[graph_number]
