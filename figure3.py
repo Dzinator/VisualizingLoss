@@ -49,7 +49,7 @@ for weight_decay in [0, 0.0005]:
 			weight_matrix_array_big = big_batch_model.get_layer(layer_name).get_weights()
 
 			#check to skip the max pool layer as it does not have any weights
-			if len(weight_matrix_array_small) != 0:
+			if len(weight_matrix_array_small) == 2:
 
 				#iterate over all weight matrices stored within a layer
 				for weight_matrix_small in weight_matrix_array_small:
@@ -57,7 +57,7 @@ for weight_decay in [0, 0.0005]:
 					weights_histogram_small.append(flattened_weights)
 		
 			#check to skip the max pool layer as it does not have any weights
-			if len(weight_matrix_array_big) != 0:
+			if len(weight_matrix_array_big) == 2:
 
 				#iterate over all weight matrices stored within a layer
 				for weight_matrix_big in weight_matrix_array_big:
@@ -92,6 +92,9 @@ for weight_decay in [0, 0.0005]:
 		gc.collect()
 
 		graph_counter += 1
+
+		break
+	break
 
 #save the data 
 with open('figure3_data.data', 'wb') as f:
