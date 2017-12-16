@@ -47,7 +47,7 @@ gaussian_vectors_by_graph_number_2 = dict()
 #iterate over all models, 8 in total (2*2*2)
 graph_counter = 1
 for weight_decay in [0, 0.0005]:
-	for optimizer in ['adam', 'sgd']:
+	for optimizer in ['sgd', 'adam']:
 		for batch_size in [512,128]:
 
 			#load the model
@@ -139,7 +139,7 @@ test_loss_by_graph_number = {1: [], 2: [], 3: [], 4:[], 5:[], 6:[], 7:[], 8:[]}
 #iterate over all models, 8 in total (2*2*2) to generate data for the 8 graphs
 graph_counter = 1
 for weight_decay in [0, 0.0005]:
-	for optimizer in ['adam', 'adam']:
+	for optimizer in ['sgd', 'adam']:
 		for batch_size in [512,128]:
 			#load the original, non-altered model
 			model = load_model('model_batch_size_' + str(batch_size) + '_optimizer_' + str(optimizer) + '_weight_decay_' + str(weight_decay) + '.h5')
